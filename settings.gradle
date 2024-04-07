@@ -1,0 +1,3 @@
+rootProject.name = 'QtAndroid'
+include('qt-src')
+include('qt-templates')

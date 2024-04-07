@@ -1,0 +1,8 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation files('d:\\AppServ\\android-sdk-windows\\platforms\\android-28\\android.jar')
+    implementation files('d:\\AppServ\\Qt\\Qt5.14.2\\5.14.2\\android\\jar\\QtAndroid.jar')
+}
