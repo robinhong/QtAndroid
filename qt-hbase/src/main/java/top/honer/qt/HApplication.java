@@ -8,7 +8,7 @@ public class HApplication extends org.qtproject.qt5.android.bindings.QtApplicati
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(QtNative.QtTAG, "Start HApplication");
+        Log.d(QtNative.QtTAG, "Start HApplication:" + getPackageName());
         HCrash.init(new HCrash.CrashHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {

@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+}
+
+archivesBaseName = 'qt-hbase'
+version '1.0'
+
+dependencies {
+    implementation files('d:\\AppServ\\android-sdk-windows\\platforms\\android-34\\android.jar')
+    implementation files('d:\\AppServ\\Qt\\Qt5.14.2\\5.14.2\\android\\jar\\QtAndroid.jar')
+    implementation fileTree(dir: 'deps', include: ['*.jar'])
+    implementation project(':qt-src')
+    //implementation files('d:\\CodeProject\\Qt\\shared\\baidumapandroidlibs\\BaiduLBS_Android.jar')
+}
+
+// 配置复制任务
+task copyJar(type: Copy) {
+    from jar // 使用 jar 任务生成的 JAR 文件作为源
+    into '../templates/libs' // 指定目标文件夹路径
+}
+
+copyJar.dependsOn(jar)

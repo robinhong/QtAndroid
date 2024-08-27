@@ -3,3 +3,5 @@
 .vscode
 # Ignore Gradle build output directory
 build
+qt-hbase/bin/
+qt-src/bin/

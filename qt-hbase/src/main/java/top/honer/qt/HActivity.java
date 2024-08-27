@@ -12,13 +12,14 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.widget.Toast;
 import android.util.Log;
 
 public class HActivity extends org.qtproject.qt5.android.bindings.QtActivity {
 
-    private Toast toast;
-    private long exitTime;
+    private long lastTime = 0;
     // 是否保持屏幕常亮
     private boolean alwaysOn = false;
     // 是否全屏
@@ -26,8 +27,17 @@ public class HActivity extends org.qtproject.qt5.android.bindings.QtActivity {
     // 是否让Qt处理KeyBackPressed事件
     private boolean qtBackPressed = false;
 
+    private static final String ACTION_CUSTOM_BROADCAST = "QT.CUSTOM_BROADCAST";
+
     public HActivity() {
 
+    }
+
+    public void sendBroadcast(String message) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_CUSTOM_BROADCAST);
+        intent.putExtra("message", message);
+        sendBroadcast(intent);
     }
 
     @Override
@@ -96,11 +106,13 @@ public class HActivity extends org.qtproject.qt5.android.bindings.QtActivity {
     }
 
     // 全屏
+
+    @SuppressWarnings("deprecation")
     private void setFullScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置全屏//稳定布局//隐藏导航栏
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
             // 允许绘制系统栏背景
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             // 设置状态栏颜色为透明
@@ -118,12 +130,10 @@ public class HActivity extends org.qtproject.qt5.android.bindings.QtActivity {
             if (qtBackPressed) {
                 return super.onKeyDown(newKeyCode, event);
             } else {
-                if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    toast = Toast.makeText(this, "再按一次回到桌面", Toast.LENGTH_SHORT);
-                    toast.show();
-                    exitTime = System.currentTimeMillis();
+                if (System.currentTimeMillis() - lastTime > 2000) {
+                    Toast.makeText(this, "再按一次回到桌面", Toast.LENGTH_SHORT).show();
+                    lastTime = System.currentTimeMillis();
                 } else {
-                    toast.cancel();
                     Intent home = new Intent(Intent.ACTION_MAIN);
                     home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     home.addCategory(Intent.CATEGORY_HOME);
